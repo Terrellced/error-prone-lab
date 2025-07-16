@@ -65,7 +65,7 @@ public class BadNamesChecker extends BugChecker implements
 
     private Description checkName(Tree tree, Name identifier) {
         // TODO: What other names are a problem? Add checks for them here...
-        if (identifier.contentEquals("foo")) {
+        if (identifier.contentEquals("foo") || identifier.containsEquals("bar") || if(identifier.length() > 10)) { //add checks for bad names.
             return buildDescription(tree)
                     .setMessage(String.format("%s is a bad identifier name", identifier))
                     .build();
