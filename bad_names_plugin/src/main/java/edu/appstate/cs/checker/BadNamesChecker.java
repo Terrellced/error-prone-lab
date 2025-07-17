@@ -23,7 +23,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 public class BadNamesChecker extends BugChecker implements
         BugChecker.IdentifierTreeMatcher,
         BugChecker.MethodInvocationTreeMatcher,
-        BugChecker.MethodTreeMatcher {
+        BugChecker.MethodTreeMatcher,
+        BugChecker.IfTreeMatcher {
 
     @java.lang.Override
     public Description matchIdentifier(IdentifierTree identifierTree, VisitorState visitorState) {
@@ -31,6 +32,20 @@ public class BadNamesChecker extends BugChecker implements
         // or just declarations?
         Name identifier = identifierTree.getName();
         return checkName(identifierTree, identifier);
+    }
+
+    //added in class
+    @Override
+    public Description matchIf(IfTree tree, VisitorState state){
+        if(tree.getElseStatement() == null){
+        return buildDescription(tree)
+                .setMessage("We found an If without an else")
+                .build();            
+        }
+
+
+
+        return Description.NO_MATCH;
     }
 
     @Override
@@ -57,24 +72,58 @@ public class BadNamesChecker extends BugChecker implements
         // MethodTree represents the definition of a method. We want to check the name of this
         // method to see if it is acceptable.
 
+        Name methodName = methodTree.getName();
+
+        return checkName(methodTree, methodName);
+
+
         // TODO: What needs to be done here to check the name of the method?
 
+
+        //saving incase it doesnt build
         // TODO: Remove this, if needed. This is just here because we need to return a Description.
-        return Description.NO_MATCH;
+
+        //return Description.NO_MATCH; 
     }
 
     private Description checkName(Tree tree, Name identifier) {
         // TODO: What other names are a problem? Add checks for them here...
-        if (identifier.contentEquals("foo") || identifier.containsEquals("bar") || if(identifier.length() > 10)) { //add checks for bad names.
+
+        String name = identifier.toString();
+
+        if (identifier.contentEquals("foo") || identifier.contentEquals("bar")) { //add checks for bad names.
             return buildDescription(tree)
                     .setMessage(String.format("%s is a bad identifier name", identifier))
                     .build();
         }
 
-        return Description.NO_MATCH;
+        //length checks
+
+        if(identifier.length() > 6){ //toolong
+            return buildDescription(tree)
+                    .setMessage(String.format("%s is too long of an identifier name", identifier))
+                    .build();
+        }
+        
+         if(identifier.length() < 6){ //tooshort
+            return buildDescription(tree)
+                    .setMessage(String.format("%s is too short of an identifier name", identifier))
+                    .build();
+         }
+
+         if(name.startsWith("_")){ //tooshort
+            return buildDescription(tree)
+                    .setMessage(String.format("%s Shouldn't start with an underscore.", identifier))
+                    .build();
+         }
+
+        //saving just incase it doesnt build
+        return Description.NO_MATCH; 
     }
 
     private static final IllegalStateException malformedMethodInvocationTree(MethodInvocationTree tree) {
         return new IllegalStateException(String.format("Method name %s is malformed.", tree));
     }
 }
+
+
