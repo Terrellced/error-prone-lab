@@ -76,13 +76,7 @@ public class BadNamesChecker extends BugChecker implements
 
         return checkName(methodTree, methodName);
 
-
-        // TODO: What needs to be done here to check the name of the method?
-
-
         //saving incase it doesnt build
-        // TODO: Remove this, if needed. This is just here because we need to return a Description.
-
         //return Description.NO_MATCH; 
     }
 
@@ -91,7 +85,8 @@ public class BadNamesChecker extends BugChecker implements
 
         String name = identifier.toString();
 
-        if (identifier.contentEquals("foo") || identifier.contentEquals("bar")) { //add checks for bad names.
+        if (identifier.contentEquals("foo") || identifier.contentEquals("bar")
+                || identifier.contentEquals("function") || identifier.contentEquals("thing")) { //add checks for bad names.
             return buildDescription(tree)
                     .setMessage(String.format("%s is a bad identifier name", identifier))
                     .build();
@@ -99,13 +94,13 @@ public class BadNamesChecker extends BugChecker implements
 
         //length checks
 
-        if(identifier.length() > 6){ //toolong
+        if(name.length() > 8){ //toolong
             return buildDescription(tree)
                     .setMessage(String.format("%s is too long of an identifier name", identifier))
                     .build();
         }
         
-         if(identifier.length() < 6){ //tooshort
+         if(name.length() < 5){ //tooshort
             return buildDescription(tree)
                     .setMessage(String.format("%s is too short of an identifier name", identifier))
                     .build();

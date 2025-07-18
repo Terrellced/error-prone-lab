@@ -5,7 +5,7 @@
 package edu.appstate.cs.examples;
 
 public class BadNames {
-  public void foo(String s) {
+  public void testinglengthname(String s) {
   	System.out.println(s);
   }
 
@@ -13,6 +13,6 @@ public class BadNames {
     String m = "This is a message";
 
     BadNames b = new BadNames();
-    b.foo(m);
+    b.testinglengthname(m);
   }
 }
