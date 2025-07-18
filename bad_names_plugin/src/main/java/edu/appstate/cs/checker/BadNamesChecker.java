@@ -112,6 +112,12 @@ public class BadNamesChecker extends BugChecker implements
                     .build();
          }
 
+         if(Character.isDigit(name.charAt(0))){
+            return buildDescription(tree)
+                    .setMessage(String.format("%s You should not start a method name with a digit.", identifier))
+                    .build();
+         }
+
         //saving just incase it doesnt build
         return Description.NO_MATCH; 
     }
